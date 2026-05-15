@@ -1,21 +1,25 @@
+
+
 <?php
-require_once('../config/db.php');
+require_once(__DIR__ . '/../config/db.php');
 
 function getMedicineById($id){
+
     global $con;
 
-    $sql = " SELECT * FROM medicines
-    WHERE id= '$id'
-    ";
-    $result = mysqli_query($con, $sql);
+    $sql = "SELECT * FROM medicines WHERE id = ?";
 
-    $row=[];
+    $stmt = mysqli_prepare($con, $sql);
 
-    while($r = mysqli_fetch_assoc($result)){
-        array_push($row, $r);
-}
-return $row[0];
+    mysqli_stmt_bind_param($stmt, "i", $id);
 
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    $row = mysqli_fetch_assoc($result);
+
+    return $row ? $row : null;
 }
 
 ?>
