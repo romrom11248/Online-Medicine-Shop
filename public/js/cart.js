@@ -48,10 +48,13 @@ function addToCart(medicineId) {
         if (this.readyState == 4 &&
             this.status == 200) {
 
+
+                console.log(response);
+
             let response =
                 JSON.parse(this.responseText);
 
-            console.log(response);
+        
 
             document.getElementById('msg')
                 .innerHTML = response.message;
@@ -103,13 +106,13 @@ function updateQuantity(cartId, action) {
 
         if (this.readyState == 4 &&
             this.status == 200) {
-                
-                console.log(this.responseText);
+
+            console.log(this.responseText);
 
             let response =
                 JSON.parse(this.responseText);
 
-            
+
 
 
 
@@ -206,4 +209,68 @@ function removeCartItem(cartId) {
             }
         }
     }
+}
+
+
+
+function confirmOrder() {
+    let addr = document.getElementById("address").value;
+    let pay= document.getElementsByName("payment").value;
+
+    if (address == " " || payment == " ") {
+        document.getElementById("msg").innerHTML = "Address and Payment Method cant be empty";
+        return;
+    }
+
+    let data = {
+        address: addr,
+        payment: pay
+    };
+    let check = JSON.stringify(true, data);
+
+    let xhttp = new XMLHttpRequest();
+
+
+    xhttp.open(
+        'POST',
+        '../../api/order/confirm.php',
+        true
+    );
+
+
+    xhttp.setRequestHeader(
+        'Content-type',
+        'application/x-www-form-urlencoded'
+    );
+
+
+    xhttp.send('cart=' + check);
+
+
+
+    xhttp.onreadystatechange = function () {
+
+        if (this.readyState == 4 &&
+            this.status == 200) {
+
+            let response =
+                JSON.parse(this.responseText);
+
+
+
+            document.getElementById('confirm')
+                .innerHTML =
+                response.message;
+
+
+                if (response.status) {
+                    window.location = "../../views/customer/medicines.php";
+
+                }
+
+
+            }
+        }
+
+
 }
