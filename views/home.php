@@ -1,5 +1,5 @@
 <?php
-require_once '../utils/auth_helper.php';
+require_once '../controllers/authHelper.php';
 require_once '../models/medicineModel.php';
 
 // Check auth
@@ -59,6 +59,6 @@ $categories = getCategories();
         </main>
     </div>
 
-    <script src="../js/home.js"></script>
+    <script src="../public/js/home.js"></script>
 </body>
 </html>

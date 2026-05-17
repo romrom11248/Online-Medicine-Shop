@@ -23,7 +23,7 @@ if(isset($_POST['submit'])){
         $_SESSION['status'] = true;
 
         if($remember) {
-            // "Remember Me" cookie + token
+            
             $token = bin2hex(random_bytes(16));
             setcookie('remember_token', $token, time() + (86400 * 30), "/");
             setcookie('remember_email', $user['email'], time() + (86400 * 30), "/");

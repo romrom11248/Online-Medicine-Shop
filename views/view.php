@@ -1,5 +1,5 @@
 <?php
-require_once '../utils/auth_helper.php';
+require_once '../controllers/authHelper.php';
 require_once '../models/userModel.php';
 
 checkAuth();

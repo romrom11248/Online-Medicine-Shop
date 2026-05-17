@@ -1,5 +1,5 @@
 <?php
-require_once '../utils/auth_helper.php';
+require_once '../controllers/authHelper.php';
 require_once '../models/userModel.php';
 
 checkAuth();
@@ -55,6 +55,6 @@ $user = getUserByEmail($_SESSION['email']);
         </div>
     </div>
     
-    <script src="../js/profile.js"></script>
+    <script src="../public/js/profile.js"></script>
 </body>
 </html>

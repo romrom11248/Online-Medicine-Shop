@@ -16,8 +16,7 @@ function checkRememberMe() {
         $user = getUserByEmail($email);
         
         if($user) {
-            // Note: In a real-world secure implementation, we would hash the token in the DB and compare it.
-            // Since this project's scope requires a simple remember me cookie:
+            
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['name'] = $user['name'];
             $_SESSION['role'] = $user['role'];

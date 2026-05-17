@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once('../models/userModel.php');
-require_once('../utils/validation_helper.php');
+require_once('validationHelper.php');
 
 if(isset($_POST['submit'])){
     $currentPassword = $_POST['current_password'] ?? '';

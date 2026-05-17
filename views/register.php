@@ -72,6 +72,6 @@ session_start();
             </form>
         </div>
     </div>
-    <script src="../js/auth.js"></script>
+    <script src="../public/js/auth.js"></script>
 </body>
 </html>

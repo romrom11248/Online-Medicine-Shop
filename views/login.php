@@ -6,7 +6,7 @@ if(isset($_SESSION['status'])) {
     exit();
 }
 // Try to check remember me token
-require_once('../utils/auth_helper.php');
+require_once('../controllers/authHelper.php');
 checkRememberMe();
 ?>
 <!DOCTYPE html>
@@ -59,6 +59,6 @@ checkRememberMe();
             </form>
         </div>
     </div>
-    <script src="../js/auth.js"></script>
+    <script src="../public/js/auth.js"></script>
 </body>
 </html>

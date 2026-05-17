@@ -10,7 +10,7 @@ if(isset($_POST['submit'])){
     $phone = trim($_POST['phone'] ?? '');
     $role = $_POST['role'] ?? '';
 
-    // Server-side validation
+   
     if($name == "" || $email == "" || $password == "" || $address == "" || $phone == "" || $role == ""){
         $_SESSION['error'] = "Please fill all the fields";
         header('location: ../views/register.php');
@@ -23,7 +23,7 @@ if(isset($_POST['submit'])){
         exit();
     }
 
-    // Check if email already exists
+   
     $existingUser = getUserByEmail($email);
     if($existingUser) {
         $_SESSION['error'] = "Email is already registered";

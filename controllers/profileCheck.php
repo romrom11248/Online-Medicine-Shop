@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once('../models/userModel.php');
-require_once('../utils/validation_helper.php');
+require_once('validationHelper.php');
 
 if(isset($_POST['submit'])){
     $name = $_POST['name'] ?? '';
@@ -23,7 +23,7 @@ if(isset($_POST['submit'])){
     
     $status = updateProfile($user);
     if($status){
-        // update session data if name changes
+      
         $_SESSION['name'] = $name;
         $_SESSION['success'] = "Profile updated successfully.";
         header('location: ../views/view.php');

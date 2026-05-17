@@ -33,7 +33,7 @@ if(isset($_FILES['profile_picture'])){
     $newfilename = time() . '_' . uniqid() . '.' . $extension;
     $destination = '../public/uploads/' . $newfilename;
     
-    // Ensure directory exists, though we created it already via bash, just in case
+    
     if(!is_dir('../public/uploads/')) {
         mkdir('../public/uploads/', 0777, true);
     }
