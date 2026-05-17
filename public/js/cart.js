@@ -1,17 +1,8 @@
-function addToCart(medicineId) {
+function addToCart(medicineId){
 
     let quantity = document.getElementById(
         'qty_' + medicineId
     ).value;
-
-
-    if (quantity <= 0 || isNaN(quantity)) {
-
-        document.getElementById('msg')
-            .innerHTML = 'Invalid Quantity';
-
-        return;
-    }
 
 
     let data = {
@@ -29,7 +20,7 @@ function addToCart(medicineId) {
 
     xhttp.open(
         'POST',
-        '../../api/cart/add.php',
+        '../../controllers/cartController.php?action=add',
         true
     );
 
@@ -43,34 +34,30 @@ function addToCart(medicineId) {
     xhttp.send('cart=' + cart);
 
 
-    xhttp.onreadystatechange = function () {
+    xhttp.onreadystatechange = function(){
 
-        if (this.readyState == 4 &&
-            this.status == 200) {
-
-
-                console.log(response);
+        if(this.readyState == 4 &&
+           this.status == 200){
 
             let response =
                 JSON.parse(this.responseText);
 
-        
 
             document.getElementById('msg')
                 .innerHTML = response.message;
 
 
-            if (response.status) {
+            if(response.status){
 
                 document.getElementById('cartCount')
                     .innerHTML = response.cartCount;
             }
         }
     }
-
 }
 
-function updateQuantity(cartId, action) {
+
+function updateQuantity(cartId, action){
 
     let data = {
 
@@ -87,7 +74,7 @@ function updateQuantity(cartId, action) {
 
     xhttp.open(
         'POST',
-        '../../api/cart/update.php',
+        '../../controllers/cartController.php?action=update',
         true
     );
 
@@ -101,53 +88,41 @@ function updateQuantity(cartId, action) {
     xhttp.send('cart=' + cart);
 
 
+    xhttp.onreadystatechange = function(){
 
-    xhttp.onreadystatechange = function () {
-
-        if (this.readyState == 4 &&
-            this.status == 200) {
-
-            console.log(this.responseText);
+        if(this.readyState == 4 &&
+           this.status == 200){
 
             let response =
                 JSON.parse(this.responseText);
-
-
-
 
 
             document.getElementById('msg')
                 .innerHTML = response.message;
 
 
-
-            if (response.status) {
+            if(response.status){
 
                 document.getElementById(
                     'qty_' + cartId
-                ).innerHTML =
-                    response.quantity;
-
+                ).innerHTML = response.quantity;
 
 
                 document.getElementById(
                     'subtotal_' + cartId
-                ).innerHTML =
-                    response.subtotal;
-
+                ).innerHTML = response.subtotal;
 
 
                 document.getElementById(
                     'total'
-                ).innerHTML =
-                    response.grandTotal;
+                ).innerHTML = response.grandTotal;
             }
         }
     }
 }
 
 
-function removeCartItem(cartId) {
+function removeCartItem(cartId){
 
     let data = {
 
@@ -163,7 +138,7 @@ function removeCartItem(cartId) {
 
     xhttp.open(
         'POST',
-        '../../api/cart/remove.php',
+        '../../controllers/cartController.php?action=remove',
         true
     );
 
@@ -177,63 +152,84 @@ function removeCartItem(cartId) {
     xhttp.send('cart=' + cart);
 
 
+    xhttp.onreadystatechange = function(){
 
-    xhttp.onreadystatechange = function () {
-
-        if (this.readyState == 4 &&
-            this.status == 200) {
+        if(this.readyState == 4 &&
+           this.status == 200){
 
             let response =
                 JSON.parse(this.responseText);
 
 
-
             document.getElementById('msg')
-                .innerHTML =
-                response.message;
+                .innerHTML = response.message;
 
 
-
-            if (response.status) {
+            if(response.status){
 
                 document.getElementById(
                     'cartRow_' + cartId
                 ).remove();
 
 
-
                 document.getElementById(
                     'total'
-                ).innerHTML =
-                    response.grandTotal;
+                ).innerHTML = response.grandTotal;
             }
         }
     }
 }
 
 
+function confirmOrder(){
 
-function confirmOrder() {
-    let addr = document.getElementById("address").value;
-    let pay= document.getElementsByName("payment").value;
+    let addr = document.getElementById(
+        'address'
+    ).value;
 
-    if (address == " " || payment == " ") {
-        document.getElementById("msg").innerHTML = "Address and Payment Method cant be empty";
+
+    let payment = '';
+
+
+    let methods =
+        document.getElementsByName('payment');
+
+
+    for(let i=0; i<methods.length; i++){
+
+        if(methods[i].checked){
+
+            payment = methods[i].value;
+        }
+    }
+
+
+    if(addr == '' || payment == ''){
+
+        document.getElementById('msg')
+            .innerHTML =
+            'Address and payment required';
+
         return;
     }
 
+
     let data = {
+
         address: addr,
-        payment: pay
+        payment: payment
     };
-    let check = JSON.stringify(true, data);
+
+
+    let check = JSON.stringify(data);
+
 
     let xhttp = new XMLHttpRequest();
 
 
     xhttp.open(
         'POST',
-        '../../api/order/confirm.php',
+        '../../controllers/orderController.php?action=confirm',
         true
     );
 
@@ -244,33 +240,31 @@ function confirmOrder() {
     );
 
 
-    xhttp.send('cart=' + check);
+    xhttp.send('check=' + check);
 
 
+    xhttp.onreadystatechange = function(){
 
-    xhttp.onreadystatechange = function () {
-
-        if (this.readyState == 4 &&
-            this.status == 200) {
+        if(this.readyState == 4 &&
+           this.status == 200){
 
             let response =
                 JSON.parse(this.responseText);
 
 
-
             document.getElementById('confirm')
-                .innerHTML =
-                response.message;
+                .innerHTML = response.message;
 
 
-                if (response.status) {
-                    window.location = "../../views/customer/medicines.php";
+            if(response.status){
 
-                }
+                setTimeout(function(){
 
+                    window.location =
+                    '../../views/customer/medicines.php';
 
+                }, 1500);
             }
         }
-
-
+    }
 }

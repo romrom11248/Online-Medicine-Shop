@@ -1,8 +1,8 @@
 <?php
+
 require_once(__DIR__ . '/../config/db.php');
 
-function getCartItem($userId, $medicineId)
-{
+function getCartItem($userId, $medicineId){
 
     global $con;
 
@@ -12,7 +12,12 @@ function getCartItem($userId, $medicineId)
 
     $stmt = mysqli_prepare($con, $sql);
 
-    mysqli_stmt_bind_param($stmt, "ii", $userId, $medicineId);
+    mysqli_stmt_bind_param(
+        $stmt,
+        "ii",
+        $userId,
+        $medicineId
+    );
 
     mysqli_stmt_execute($stmt);
 
@@ -23,8 +28,9 @@ function getCartItem($userId, $medicineId)
     return $row ? $row : null;
 }
 
-function getCartByID($cart_Id)
-{
+
+
+function getCartByID($cartId){
 
     global $con;
 
@@ -33,7 +39,11 @@ function getCartByID($cart_Id)
 
     $stmt = mysqli_prepare($con, $sql);
 
-    mysqli_stmt_bind_param($stmt, "i", $cart_Id);
+    mysqli_stmt_bind_param(
+        $stmt,
+        "i",
+        $cartId
+    );
 
     mysqli_stmt_execute($stmt);
 
@@ -44,12 +54,17 @@ function getCartByID($cart_Id)
     return $row ? $row : null;
 }
 
-function insertCartItem($userId, $medicineId, $quantity)
-{
+
+
+function insertCartItem($userId, $medicineId, $quantity){
 
     global $con;
 
-    $sql = "INSERT INTO cart(user_id, medicine_id, quantity)
+    $sql = "INSERT INTO cart(
+            user_id,
+            medicine_id,
+            quantity
+            )
             VALUES(?, ?, ?)";
 
     $stmt = mysqli_prepare($con, $sql);
@@ -67,8 +82,7 @@ function insertCartItem($userId, $medicineId, $quantity)
 
 
 
-function updateCartQuantity($cartId, $newQuantity)
-{
+function updateCartQuantity($cartId, $newQuantity){
 
     global $con;
 
@@ -90,8 +104,47 @@ function updateCartQuantity($cartId, $newQuantity)
 
 
 
-function getCartCount($userId)
-{
+function deleteCartItem($cartId){
+
+    global $con;
+
+    $sql = "DELETE FROM cart
+            WHERE id = ?";
+
+    $stmt = mysqli_prepare($con, $sql);
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "i",
+        $cartId
+    );
+
+    return mysqli_stmt_execute($stmt);
+}
+
+
+
+function clearCart($userId){
+
+    global $con;
+
+    $sql = "DELETE FROM cart
+            WHERE user_id = ?";
+
+    $stmt = mysqli_prepare($con, $sql);
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "i",
+        $userId
+    );
+
+    return mysqli_stmt_execute($stmt);
+}
+
+
+
+function getCartCount($userId){
 
     global $con;
 
@@ -101,7 +154,11 @@ function getCartCount($userId)
 
     $stmt = mysqli_prepare($con, $sql);
 
-    mysqli_stmt_bind_param($stmt, "i", $userId);
+    mysqli_stmt_bind_param(
+        $stmt,
+        "i",
+        $userId
+    );
 
     mysqli_stmt_execute($stmt);
 
@@ -113,21 +170,39 @@ function getCartCount($userId)
 }
 
 
-function deleteCartItem($cartId)
-{
+
+function getGrandTotal($userId){
+
     global $con;
 
-    $sql = 'DELETE FROM cart
-        WHERE id=?';
+    $sql = "SELECT
+            SUM(cart.quantity * medicines.price)
+            AS grandTotal
+
+            FROM cart
+
+            INNER JOIN medicines
+            ON cart.medicine_id = medicines.id
+
+            WHERE cart.user_id = ?";
 
     $stmt = mysqli_prepare($con, $sql);
 
-    mysqli_stmt_bind_param($stmt, "i", $cartId);
+    mysqli_stmt_bind_param(
+        $stmt,
+        "i",
+        $userId
+    );
 
-    return mysqli_stmt_execute($stmt);
+    mysqli_stmt_execute($stmt);
 
+    $result = mysqli_stmt_get_result($stmt);
 
+    $row = mysqli_fetch_assoc($result);
+
+    return $row['grandTotal'] ?? 0;
 }
+
 
 
 function getCartItems($userId){
@@ -175,36 +250,4 @@ function getCartItems($userId){
     return $items;
 }
 
-
-function getGrandTotal($userId){
-
-    global $con;
-
-    $sql = "SELECT
-            SUM(cart.quantity * medicines.price)
-            AS grandTotal
-
-            FROM cart
-
-            INNER JOIN medicines
-            ON cart.medicine_id = medicines.id
-
-            WHERE cart.user_id = ?";
-
-    $stmt = mysqli_prepare($con, $sql);
-
-    mysqli_stmt_bind_param(
-        $stmt,
-        "i",
-        $userId
-    );
-
-    mysqli_stmt_execute($stmt);
-
-    $result = mysqli_stmt_get_result($stmt);
-
-    $row = mysqli_fetch_assoc($result);
-
-    return $row['grandTotal'] ?? 0;
-}
 ?>

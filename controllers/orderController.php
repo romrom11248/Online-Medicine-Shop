@@ -1,11 +1,13 @@
 <?php
+
 require_once(__DIR__ . '/../models/cartModel.php');
+require_once(__DIR__ . '/../models/orderModel.php');
+require_once(__DIR__ . '/../models/paymentModel.php');
 require_once(__DIR__ . '/../models/medicineModel.php');
 
+function placeOrder(){
 
-function placeOrder()
-{
-    if (!isset($_SESSION['user_id'])) {
+    if(!isset($_SESSION['user_id'])){
 
         echo json_encode([
             'status' => false,
@@ -15,10 +17,12 @@ function placeOrder()
         exit();
     }
 
-    $check= $_REQUEST['check'];
-    $data= json_decode($check,true);
 
-    
+    $check = $_REQUEST['check'] ?? '';
+
+    $data = json_decode($check, true);
+
+
     if(!$data){
 
         echo json_encode([
@@ -29,70 +33,122 @@ function placeOrder()
         exit();
     }
 
-    /* cart.id,
-    cart.quantity,
 
-    medicines.id AS medicine_id,
-    medicines.name,
-    medicines.price,
-    medicines.vendor_name,
-    medicines.image_path,
-    medicines.availability
-
-    FROM cart
-
-    INNER JOIN medicines
-    ON cart.medicine_id = medicines.id
-
-    WHERE cart.user_id = ?";*/
-
-
-    $items=getCartItems($_SESSION['user_id']);
-
-    $meds=getMedicineById($items['medicine_id']);
-
-    $total=getGrandTotal($_SESSION['user_id']);
-
-    //function createOrder($userId, $total, $address, $status, $method)
-
-    $order_id= createOrder($_SESSION['user_id'],$total,$data['address'],"pending",$data['payment']);
-
-    if(!$order_id){
+    if(empty($data['address']) ||
+       empty($data['payment'])){
 
         echo json_encode([
             'status' => false,
-            'message' => 'Order creation failed'
-        ]);
-
-        exit();
-    }
-    
-    $status1=createOrderItem($order_id,$items['medicine_id'],$items['quantity'],$items['price'] );
-
-    if(!$status1){
-        echo json_encode([
-            'status' => false,
-            'message' => 'Order items failed'
+            'message' => 'Address and payment required'
         ]);
 
         exit();
     }
 
 
-    $status2=createPayment($order_id,$total,$data['payment'],NULL);
+    $items = getCartItems(
+        $_SESSION['user_id']
+    );
 
-    if(!$status2){
+
+    if(empty($items)){
+
         echo json_encode([
             'status' => false,
-            'message' => 'Payment failed'
+            'message' => 'Cart is empty'
         ]);
 
         exit();
     }
 
 
+    foreach($items as $item){
+
+        if($item['quantity'] >
+           $item['availability']){
+
+            echo json_encode([
+                'status' => false,
+                'message' => 'Stock unavailable'
+            ]);
+
+            exit();
+        }
+    }
+
+
+    $total = getGrandTotal(
+        $_SESSION['user_id']
+    );
+
+
+    $orderId = createOrder(
+        $_SESSION['user_id'],
+        $total,
+        $data['address'],
+        'pending',
+        $data['payment']
+    );
+
+
+    if(!$orderId){
+
+        echo json_encode([
+            'status' => false,
+            'message' => 'Order failed'
+        ]);
+
+        exit();
+    }
+
+
+    foreach($items as $item){
+
+        createOrderItem(
+            $orderId,
+            $item['medicine_id'],
+            $item['quantity'],
+            $item['price']
+        );
+
+
+        updateMedicineStock(
+            $item['quantity'],
+            $item['medicine_id']
+        );
+    }
+
+
+    createPayment(
+        $orderId,
+        $total,
+        $data['payment'],
+        NULL
+    );
+
+
+    clearCart($_SESSION['user_id']);
+
+
+    echo json_encode([
+        'status' => true,
+        'message' => 'Order placed successfully'
+    ]);
+
+    exit();
 }
 
 
+if(isset($_GET['action'])){
 
+    session_start();
+
+    header('Content-Type: application/json');
+
+
+    if($_GET['action'] == 'confirm'){
+
+        placeOrder();
+    }
+}
 ?>

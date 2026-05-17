@@ -1,17 +1,21 @@
-
-
 <?php
+
 require_once(__DIR__ . '/../config/db.php');
 
 function getMedicineById($id){
 
     global $con;
 
-    $sql = "SELECT * FROM medicines WHERE id = ?";
+    $sql = "SELECT * FROM medicines
+            WHERE id = ?";
 
     $stmt = mysqli_prepare($con, $sql);
 
-    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_bind_param(
+        $stmt,
+        "i",
+        $id
+    );
 
     mysqli_stmt_execute($stmt);
 
@@ -23,11 +27,13 @@ function getMedicineById($id){
 }
 
 
-function updateMedicineStock($a,$b){
+
+function updateMedicineStock($quantity, $medicineId){
+
     global $con;
 
     $sql = "UPDATE medicines
-            SET availabilty = availabilty- ?
+            SET availability = availability - ?
             WHERE id = ?";
 
     $stmt = mysqli_prepare($con, $sql);
@@ -35,11 +41,10 @@ function updateMedicineStock($a,$b){
     mysqli_stmt_bind_param(
         $stmt,
         "ii",
-        $a,
-        $b
+        $quantity,
+        $medicineId
     );
 
     return mysqli_stmt_execute($stmt);
 }
 ?>
-

@@ -1,6 +1,5 @@
-
-
 <?php
+
 require_once(__DIR__ . '/../models/cartModel.php');
 require_once(__DIR__ . '/../models/medicineModel.php');
 
@@ -17,11 +16,9 @@ function addToCart(){
     }
 
 
-
     $cart = $_REQUEST['cart'] ?? '';
 
     $data = json_decode($cart, true);
-
 
 
     if(!$data){
@@ -35,43 +32,23 @@ function addToCart(){
     }
 
 
-
-    if(
-        !is_numeric($data['med_id']) ||
-        !is_numeric($data['quantity']) ||
-        $data['quantity'] <= 0
-    ){
-
-        echo json_encode([
-            'status' => false,
-            'message' => 'Invalid input'
-        ]);
-
-        exit();
-    }
-
-
-
     $medicineId = (int)$data['med_id'];
 
     $quantity = (int)$data['quantity'];
 
 
-
     $medicine = getMedicineById($medicineId);
-
 
 
     if(empty($medicine)){
 
         echo json_encode([
             'status' => false,
-            'message' => 'Medicine does not exist'
+            'message' => 'Medicine not found'
         ]);
 
         exit();
     }
-
 
 
     $cartItem = getCartItem(
@@ -80,12 +57,10 @@ function addToCart(){
     );
 
 
-
     if(!empty($cartItem)){
 
         $newQuantity =
             $cartItem['quantity'] + $quantity;
-
 
 
         if($newQuantity > $medicine['availability']){
@@ -97,7 +72,6 @@ function addToCart(){
 
             exit();
         }
-
 
 
         $status = updateCartQuantity(
@@ -118,7 +92,6 @@ function addToCart(){
         }
 
 
-
         $status = insertCartItem(
             $_SESSION['user_id'],
             $medicineId,
@@ -127,12 +100,12 @@ function addToCart(){
     }
 
 
-
     if($status){
 
         $total = getCartCount(
             $_SESSION['user_id']
         );
+
 
         echo json_encode([
             'status' => true,
@@ -141,48 +114,15 @@ function addToCart(){
         ]);
 
         exit();
-
-    }else{
-
-        echo json_encode([
-            'status' => false,
-            'message' => 'Database error'
-        ]);
-
-        exit();
     }
 }
 
+
 function updateCart(){
-
-    if(!isset($_SESSION['user_id'])){
-
-        echo json_encode([
-            'status' => false,
-            'message' => 'Login required'
-        ]);
-
-        exit();
-    }
-
-
 
     $cart = $_REQUEST['cart'] ?? '';
 
     $data = json_decode($cart, true);
-
-
-
-    if(!$data){
-
-        echo json_encode([
-            'status' => false,
-            'message' => 'Invalid data'
-        ]);
-
-        exit();
-    }
-
 
 
     $cartId = (int)$data['cart_id'];
@@ -190,27 +130,11 @@ function updateCart(){
     $action = $data['action'];
 
 
-
     $cartItem = getCartByID($cartId);
-
-
-
-    if(empty($cartItem)){
-
-        echo json_encode([
-            'status' => false,
-            'message' => 'Cart item not found'
-        ]);
-
-        exit();
-    }
-
-
 
     $medicine = getMedicineById(
         $cartItem['medicine_id']
     );
-
 
 
     if($action == 'increase'){
@@ -219,9 +143,7 @@ function updateCart(){
             $cartItem['quantity'] + 1;
 
 
-
-        if($newQuantity >
-           $medicine['availability']){
+        if($newQuantity > $medicine['availability']){
 
             echo json_encode([
                 'status' => false,
@@ -231,11 +153,10 @@ function updateCart(){
             exit();
         }
 
-    }else if($action == 'decrease'){
+    }else{
 
         $newQuantity =
             $cartItem['quantity'] - 1;
-
 
 
         if($newQuantity < 1){
@@ -247,24 +168,13 @@ function updateCart(){
 
             exit();
         }
-
-    }else{
-
-        echo json_encode([
-            'status' => false,
-            'message' => 'Invalid action'
-        ]);
-
-        exit();
     }
-
 
 
     $status = updateCartQuantity(
         $cartId,
         $newQuantity
     );
-
 
 
     if($status){
@@ -274,31 +184,17 @@ function updateCart(){
             $newQuantity;
 
 
-
         $grandTotal = getGrandTotal(
             $_SESSION['user_id']
         );
 
 
-
         echo json_encode([
-
             'status' => true,
-
+            'message' => 'Updated successfully',
             'quantity' => $newQuantity,
-
             'subtotal' => $subtotal,
-
             'grandTotal' => $grandTotal
-        ]);
-
-        exit();
-
-    }else{
-
-        echo json_encode([
-            'status' => false,
-            'message' => 'Database error'
         ]);
 
         exit();
@@ -306,46 +202,17 @@ function updateCart(){
 }
 
 
-
-
 function removeCart(){
-
-    if(!isset($_SESSION['user_id'])){
-
-        echo json_encode([
-            'status' => false,
-            'message' => 'Login required'
-        ]);
-
-        exit();
-    }
-
-
 
     $cart = $_REQUEST['cart'] ?? '';
 
     $data = json_decode($cart, true);
 
 
-
-    if(!$data){
-
-        echo json_encode([
-            'status' => false,
-            'message' => 'Invalid data'
-        ]);
-
-        exit();
-    }
-
-
-
     $cartId = (int)$data['cart_id'];
 
 
-
     $status = deleteCartItem($cartId);
-
 
 
     if($status){
@@ -355,27 +222,37 @@ function removeCart(){
         );
 
 
-
         echo json_encode([
-
             'status' => true,
-
             'message' => 'Removed successfully',
-
             'grandTotal' => $grandTotal
         ]);
 
         exit();
+    }
+}
 
-    }else{
 
-        echo json_encode([
-            'status' => false,
-            'message' => 'Database error'
-        ]);
+if(isset($_GET['action'])){
 
-        exit();
+    session_start();
+
+    header('Content-Type: application/json');
+
+
+    if($_GET['action'] == 'add'){
+
+        addToCart();
     }
 
+    else if($_GET['action'] == 'update'){
+
+        updateCart();
+    }
+
+    else if($_GET['action'] == 'remove'){
+
+        removeCart();
+    }
 }
 ?>

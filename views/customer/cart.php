@@ -23,112 +23,138 @@ $total = getGrandTotal(
 
 <head>
 
-    <title>Cart</title>
+<title>Cart</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f4f4f4;
+    padding:20px;
+}
+
+.box{
+    background:white;
+    border:1px solid #ddd;
+    padding:15px;
+    margin:15px 0;
+    border-radius:6px;
+    width:320px;
+}
+
+button{
+    padding:6px 12px;
+    border:none;
+    background:#2d89ef;
+    color:white;
+    border-radius:4px;
+    cursor:pointer;
+}
+
+a{
+    text-decoration:none;
+    background:#27ae60;
+    color:white;
+    padding:10px 15px;
+    border-radius:4px;
+}
+</style>
 
 </head>
 
 <body>
 
-    <h1>Cart Items</h1>
+<h1>Cart Items</h1>
 
-    <h2>
-        Total:
-        <span id="total">
-            <?php echo $total; ?>
-        </span>
-    </h2>
+<h2>
+Grand Total:
+<span id="total">
+<?php echo $total; ?>
+</span>
+</h2>
 
-    <?php
+<?php
 
-    foreach ($items as $item) {
+foreach($items as $item){
 
-        $subtotal =
-            $item['price'] *
-            $item['quantity'];
+$subtotal =
+$item['price'] *
+$item['quantity'];
 
-        ?>
+?>
 
-        <div id="cartRow_<?php echo $item['id']; ?>" style="
-border:1px solid black;
-padding:10px;
-margin:10px;
-width:300px;
-">
+<div
+class="box"
+id="cartRow_<?php echo $item['id']; ?>"
+>
 
-            <h3>
-                <?php echo $item['name']; ?>
-            </h3>
+<h3>
+<?php echo $item['name']; ?>
+</h3>
 
-            <p>
-                Vendor:
-                <?php echo $item['vendor_name']; ?>
-            </p>
+<p>
+Vendor:
+<?php echo $item['vendor_name']; ?>
+</p>
 
-            <p>
-                Price:
-                <?php echo $item['price']; ?>
-            </p>
+<p>
+Price:
+<?php echo $item['price']; ?>
+</p>
 
-            <p>
+<p>
+Quantity:
 
-                Quantity:
+<button
+onclick="updateQuantity(
+<?php echo $item['id']; ?>,
+'decrease'
+)">
+-
+</button>
 
-                <button onclick="
-        updateQuantity(
-        <?php echo $item['id']; ?>,
-        'decrease'
-        )">
-                    -
-                </button>
+<span id="qty_<?php echo $item['id']; ?>">
+<?php echo $item['quantity']; ?>
+</span>
 
-                <span id="qty_<?php echo $item['id']; ?>">
-                    <?php echo $item['quantity']; ?>
-                </span>
+<button
+onclick="updateQuantity(
+<?php echo $item['id']; ?>,
+'increase'
+)">
++
+</button>
 
-                <button onclick="
-        updateQuantity(
-        <?php echo $item['id']; ?>,
-        'increase'
-        )">
-                    +
-                </button>
+</p>
 
-            </p>
+<p>
+Subtotal:
+<span id="subtotal_<?php echo $item['id']; ?>">
+<?php echo $subtotal; ?>
+</span>
+</p>
 
-            <p>
+<button
+onclick="removeCartItem(
+<?php echo $item['id']; ?>
+)">
+Remove
+</button>
 
-                Subtotal:
+</div>
 
-                <span id="subtotal_<?php echo $item['id']; ?>">
-                    <?php echo $subtotal; ?>
-                </span>
+<?php
+}
+?>
 
-            </p>
+<p id="msg"></p>
 
-            <button onclick="
-    removeCartItem(
-    <?php echo $item['id']; ?>
-    )">
-                Remove
-            </button>
+<br>
 
-        </div>
+<a href="checkout.php">
+Proceed To Checkout
+</a>
 
-        <?php
-
-    }
-
-    ?>
-
-    <p id="msg"></p>
-
-
-    <a href="checkout.php">
-        Checkout
-    </a>
-
-
-    <script src="../../public/js/cart.js"></script>
+<script src="../../public/js/cart.js"></script>
 
 </body>
 

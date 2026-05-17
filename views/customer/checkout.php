@@ -17,66 +17,137 @@ $total = getGrandTotal(
 
 ?>
 
-
 <!DOCTYPE html>
 
 <html>
 
 <head>
 
-    <title>Checkout</title>
+<title>Checkout</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f5f5f5;
+    padding:20px;
+}
+
+.container{
+    background:white;
+    width:500px;
+    padding:20px;
+    border-radius:6px;
+    border:1px solid #ddd;
+}
+
+button{
+    background:#27ae60;
+    color:white;
+    border:none;
+    padding:10px 16px;
+    border-radius:4px;
+    cursor:pointer;
+}
+
+textarea{
+    width:100%;
+    height:80px;
+}
+</style>
 
 </head>
 
 <body>
 
-    <h1>Checkout Page</h1>
+<div class="container">
 
-    <h2>Medicine list</h2>
-    <hr>
+<h1>Checkout</h1>
 
-    <?php
+<hr>
 
-    foreach ($items as $item) {
+<?php
 
-        ?>
+foreach($items as $item){
 
-        <label><?php echo $item['name']; ?> </label>
-        <label><?php echo $item['quantity']; ?> x </label>
-        <label><?php echo $item['price']; ?> =</label>
-        <label><?php echo $item['price'] * $item['quantity']; ?></label>
+?>
 
-    <?php } ?>
-    <hr>
+<p>
+<?php echo $item['name']; ?>
+-
+<?php echo $item['quantity']; ?> x
+<?php echo $item['price']; ?>
+=
+<?php echo $item['quantity'] * $item['price']; ?>
+</p>
 
-    <label for="">Grand Total: <?php echo $total; ?> </label>
+<?php
+}
+?>
 
-    <hr>
-    <hr>
+<hr>
 
-    <label for="">Address: </label>
+<h3>
+Grand Total:
+<?php echo $total; ?>
+</h3>
 
-    <textarea id="address"></textarea>
-    <br>
-    <br>
+<hr>
 
+<label>
+Address:
+</label>
 
-    <label for="">Payment method: </label>
-    <input type="radio" name="payment" id="" value="bkash">bKash
-    <input type="radio" name="payment" id="" value="Nagad">Nagad
-    <input type="radio" name="payment" id="" value="COD">COD
-    <br>
-    <span id="msg"></span>
+<br><br>
 
-    <hr>
+<textarea id="address"></textarea>
 
-    <button onclick="confirmOrder()">
-        Confirm Purchase
-    </button>
+<br><br>
+
+<label>
+Payment Method:
+</label>
+
+<br><br>
+
+<input
+type="radio"
+name="payment"
+value="bKash"
+>
+bKash
+
+<br>
+
+<input
+type="radio"
+name="payment"
+value="Nagad"
+>
+Nagad
+
+<br>
+
+<input
+type="radio"
+name="payment"
+value="COD"
+>
+Cash On Delivery
+
+<br><br>
+
+<button onclick="confirmOrder()">
+Confirm Purchase
+</button>
+
+<br><br>
+
+<div id="msg"></div>
 <div id="confirm"></div>
-    <script src="../../public/js/cart.js"></script>
 
+</div>
 
+<script src="../../public/js/cart.js"></script>
 
 </body>
 
