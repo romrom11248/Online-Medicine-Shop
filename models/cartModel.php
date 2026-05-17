@@ -111,6 +111,8 @@ function getCartCount($userId)
 
     return $row['total'] ?? 0;
 }
+
+
 function deleteCartItem($cartId)
 {
     global $con;
@@ -128,39 +130,81 @@ function deleteCartItem($cartId)
 }
 
 
-function getCartItems($userId)
-{
+function getCartItems($userId){
+
     global $con;
 
     $sql = "SELECT
-cart.id,
-cart.quantity,
 
-medicines.name,
-medicines.price,
-medicines.vendor_name,
-medicines.image_path,
-medicines.availability
+            cart.id,
+            cart.quantity,
 
-FROM cart
+            medicines.id AS medicine_id,
+            medicines.name,
+            medicines.price,
+            medicines.vendor_name,
+            medicines.image_path,
+            medicines.availability
 
-INNER JOIN medicines
-ON cart.medicine_id = medicines.id
+            FROM cart
 
-WHERE cart.user_id = ?";
-$stmt = mysqli_prepare($con, $sql);
+            INNER JOIN medicines
+            ON cart.medicine_id = medicines.id
 
-mysqli_stmt_bind_param($stmt, "i", $userId);
+            WHERE cart.user_id = ?";
 
-mysqli_stmt_execute($stmt);
+    $stmt = mysqli_prepare($con, $sql);
 
-$result = mysqli_stmt_get_result($stmt);
+    mysqli_stmt_bind_param(
+        $stmt,
+        "i",
+        $userId
+    );
 
-$row = mysqli_fetch_assoc($result);
+    mysqli_stmt_execute($stmt);
 
-return $row ? $row : null;
+    $result = mysqli_stmt_get_result($stmt);
+
+    $items = [];
+
+    while($row = mysqli_fetch_assoc($result)){
+
+        array_push($items, $row);
+    }
+
+    return $items;
 }
 
 
+function getGrandTotal($userId){
 
+    global $con;
+
+    $sql = "SELECT
+            SUM(cart.quantity * medicines.price)
+            AS grandTotal
+
+            FROM cart
+
+            INNER JOIN medicines
+            ON cart.medicine_id = medicines.id
+
+            WHERE cart.user_id = ?";
+
+    $stmt = mysqli_prepare($con, $sql);
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "i",
+        $userId
+    );
+
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    $row = mysqli_fetch_assoc($result);
+
+    return $row['grandTotal'] ?? 0;
+}
 ?>

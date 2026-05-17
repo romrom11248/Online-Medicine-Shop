@@ -1,15 +1,22 @@
+
+
+
 <?php
 
 session_start();
-//lets assume
+
 $_SESSION['user_id'] = 2;
 $_SESSION['role'] = 'customer';
 
-require_once('../../config/db.php');
+require_once('../../models/cartModel.php');
 
-require_once('../../model/cartModel.php');
+$items = getCartItems(
+    $_SESSION['user_id']
+);
 
-$items = getCartItems($_SESSION['user_id']);
+$total = getGrandTotal(
+    $_SESSION['user_id']
+);
 
 ?>
 
@@ -25,64 +32,107 @@ $items = getCartItems($_SESSION['user_id']);
 
 <body>
 
-    <h1>Cart Items</h1>
+<h1>Cart Items</h1>
+
+<h2>
+    Total:
+    <span id="total">
+        <?php echo $total; ?>
+    </span>
+</h2>
+
+<?php
+
+foreach($items as $item){
+
+    $subtotal =
+        $item['price'] *
+        $item['quantity'];
+
+?>
+
+<div
+id="cartRow_<?php echo $item['id']; ?>"
+
+style="
+border:1px solid black;
+padding:10px;
+margin:10px;
+width:300px;
+"
+>
 
     <h3>
-        Total Cost:
-        <span id="total">0</span>
+        <?php echo $item['name']; ?>
     </h3>
 
-    <?php
+    <p>
+        Vendor:
+        <?php echo $item['vendor_name']; ?>
+    </p>
 
-    foreach ($items as $item) {
+    <p>
+        Price:
+        <?php echo $item['price']; ?>
+    </p>
 
-        ?>
+    <p>
 
-        <div style="border:1px solid black; padding:10px; margin:10px; width:300px; ">
+        Quantity:
 
-            <h3>
-                <?php echo $item['medicines.name']; ?>
-            </h3>
+        <button
+        onclick="
+        updateQuantity(
+        <?php echo $item['id']; ?>,
+        'decrease'
+        )">
+        -
+        </button>
 
-            <p>
-                Price:
-                <?php echo $item['medicines.price']; ?>
-            </p>
+        <span id="qty_<?php echo $item['id']; ?>">
+            <?php echo $item['quantity']; ?>
+        </span>
 
-            <p>
-                Quantity:
-                <?php echo $item['cart.quantity']; ?>
-            </p>
+        <button
+        onclick="
+        updateQuantity(
+        <?php echo $item['id']; ?>,
+        'increase'
+        )">
+        +
+        </button>
 
-            <h3>
-                Subtotal:
-                <span id="subtotal_<?php echo $item['cart.id']; ?>">0</span>
-            </h3>
+    </p>
 
-            <button onclick="increase(<?php echo $item['cart.id'].','.$item['medicine.price']; ?>)">
-           +
-           <br>
-           <button onclick="decrease(<?php echo $item['cart.id'].','.$item['medicine.price']; ?>)">
-           -
-        
+    <p>
 
-            <br><br>
+        Subtotal:
 
-            <button onclick="remove(<?php echo $item['cart.id'].','.$item['medicine.price']; ?>)">
-                Add To Cart
-            </button>
+        <span id="subtotal_<?php echo $item['id']; ?>">
+            <?php echo $subtotal; ?>
+        </span>
 
-        </div>
+    </p>
 
-        <?php
+    <button
+    onclick="
+    removeCartItem(
+    <?php echo $item['id']; ?>
+    )">
+        Remove
+    </button>
 
-    }
+</div>
 
-    ?>
+<?php
 
-    <p id="msg"></p>
+}
 
-    <script src="../../public/js/cart.js"></script>
+?>
+
+<p id="msg"></p>
+
+<script src="../../public/js/cart.js"></script>
 
 </body>
 

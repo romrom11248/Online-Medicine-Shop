@@ -27,6 +27,10 @@ $result = mysqli_query($con, $sql);
 
     <h1>Medicine List</h1>
 
+    <a href="cart.php">
+        Go To Cart
+    </a>
+
     <h3>
         Cart Count:
         <span id="cartCount">0</span>

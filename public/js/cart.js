@@ -1,11 +1,11 @@
-function addToCart(medicineId){
+function addToCart(medicineId) {
 
     let quantity = document.getElementById(
         'qty_' + medicineId
     ).value;
 
 
-    if(quantity <= 0 || isNaN(quantity)){
+    if (quantity <= 0 || isNaN(quantity)) {
 
         document.getElementById('msg')
             .innerHTML = 'Invalid Quantity';
@@ -43,21 +43,21 @@ function addToCart(medicineId){
     xhttp.send('cart=' + cart);
 
 
-    xhttp.onreadystatechange = function(){
+    xhttp.onreadystatechange = function () {
 
-        if(this.readyState == 4 &&
-           this.status == 200){
+        if (this.readyState == 4 &&
+            this.status == 200) {
 
             let response =
-            JSON.parse(this.responseText);
-        
-        console.log(response);
+                JSON.parse(this.responseText);
+
+            console.log(response);
 
             document.getElementById('msg')
                 .innerHTML = response.message;
 
 
-            if(response.status){
+            if (response.status) {
 
                 document.getElementById('cartCount')
                     .innerHTML = response.cartCount;
@@ -67,12 +67,12 @@ function addToCart(medicineId){
 
 }
 
-function increase(cart_id,med_price){
+function updateQuantity(cartId, action) {
 
     let data = {
 
-        cart_id: cart_id,
-        med_price:med_price
+        cart_id: cartId,
+        action: action
     };
 
 
@@ -84,7 +84,7 @@ function increase(cart_id,med_price){
 
     xhttp.open(
         'POST',
-        '../../api/cart/add.php',
+        '../../api/cart/update.php',
         true
     );
 
@@ -95,88 +95,60 @@ function increase(cart_id,med_price){
     );
 
 
-    xhttp.send('increase=' + cart);
+    xhttp.send('cart=' + cart);
 
 
-    xhttp.onreadystatechange = function(){
 
-        if(this.readyState == 4 &&
-           this.status == 200){
+    xhttp.onreadystatechange = function () {
+
+        if (this.readyState == 4 &&
+            this.status == 200) {
+                
+                console.log(this.responseText);
 
             let response =
-            JSON.parse(this.responseText);
+                JSON.parse(this.responseText);
+
+            
+
+
 
             document.getElementById('msg')
                 .innerHTML = response.message;
 
-                document.getElementById('subtotal_'+item['cart.id'])
-                .innerHTML = response.subtotal;
 
-          
+
+            if (response.status) {
+
+                document.getElementById(
+                    'qty_' + cartId
+                ).innerHTML =
+                    response.quantity;
+
+
+
+                document.getElementById(
+                    'subtotal_' + cartId
+                ).innerHTML =
+                    response.subtotal;
+
+
+
+                document.getElementById(
+                    'total'
+                ).innerHTML =
+                    response.grandTotal;
             }
-        
-    }
-
-
-}
-
-
-
-function decrease(cart_id){
-
-    let data = {
-
-        cart_id: cart_id,
-        med_price:med_price
-    };
-
-
-    let cart = JSON.stringify(data);
-
-
-    let xhttp = new XMLHttpRequest();
-
-
-    xhttp.open(
-        'POST',
-        '../../api/cart/add.php',
-        true
-    );
-
-
-    xhttp.setRequestHeader(
-        'Content-type',
-        'application/x-www-form-urlencoded'
-    );
-
-
-    xhttp.send('decrease=' + cart);
-
-
-    xhttp.onreadystatechange = function(){
-
-        if(this.readyState == 4 &&
-           this.status == 200){
-
-            let response =
-            JSON.parse(this.responseText);
-
-            document.getElementById('msg')
-                .innerHTML = response.message;
-
-                document.getElementById('subtotal_'+item['cart.id'])
-                .innerHTML = response.subtotal;
-
-          
-            }
-        
+        }
     }
 }
 
-function remove(cart_id){
+
+function removeCartItem(cartId) {
+
     let data = {
-        cart_id: cart_id,
-        med_price:med_price
+
+        cart_id: cartId
     };
 
 
@@ -188,7 +160,7 @@ function remove(cart_id){
 
     xhttp.open(
         'POST',
-        '../../api/cart/add.php',
+        '../../api/cart/remove.php',
         true
     );
 
@@ -199,23 +171,39 @@ function remove(cart_id){
     );
 
 
-    xhttp.send('remove=' + cart);
+    xhttp.send('cart=' + cart);
 
 
-    xhttp.onreadystatechange = function(){
 
-        if(this.readyState == 4 &&
-           this.status == 200){
+    xhttp.onreadystatechange = function () {
+
+        if (this.readyState == 4 &&
+            this.status == 200) {
 
             let response =
-            JSON.parse(this.responseText);
+                JSON.parse(this.responseText);
+
+
 
             document.getElementById('msg')
-                .innerHTML = response.message;
+                .innerHTML =
+                response.message;
 
-          
+
+
+            if (response.status) {
+
+                document.getElementById(
+                    'cartRow_' + cartId
+                ).remove();
+
+
+
+                document.getElementById(
+                    'total'
+                ).innerHTML =
+                    response.grandTotal;
             }
-        
+        }
     }
-
 }
