@@ -20,6 +20,8 @@ $categories = getCategories();
         <div class="container navbar-content">
             <div class="brand">OMS</div>
             <div class="nav-links">
+            <a href="customer/medicines.php">Browse Medicines</a>
+            <a href="customer/cart.php">See Cart</a>
                 <span>Welcome, <?php echo htmlspecialchars($_SESSION['name']); ?> (<?php echo htmlspecialchars($_SESSION['role']); ?>)</span>
                 <a href="view.php">Profile</a>
                 <a href="../controllers/logout.php" class="btn-outline" style="padding: 0.25rem 0.75rem;">Logout</a>

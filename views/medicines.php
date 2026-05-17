@@ -1,121 +1,118 @@
 <?php
-    session_start();
-    if(!isset($_SESSION['role']) || $_SESSION['role'] != 'admin'){
-        header('location: login.php');
-    }
 
-    require_once('../models/AdminModel.php');
-    $pageTitle = "Medicine Management";
-    $categories = getAllCategories();
-    $medicines = getAllMedicines();
-    require_once('header.php');
+session_start();
+
+if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'customer'){
+    header('location: ../../views/login.php');
+    exit();
+}
+
+require_once('../../models/medicineModel.php');
+
+// Get all medicines (no filters)
+$medicines = searchMedicines('', '', '');
+
 ?>
 
-<h3>Medicine Management</h3>
+<!DOCTYPE html>
+<html>
+<head>
 
-<form method="post" action="../controllers/medicineController.php" enctype="multipart/form-data" class="validate-medicine box" data-image-required="1">
-    <fieldset>
-        <legend>Add Medicine</legend>
-        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-        <input type="hidden" name="action" value="add">
+<title>Medicines</title>
 
-        <table class="form-table">
-            <tr>
-                <td>Name</td>
-                <td>
-                    <input type="text" name="name" value="">
-                    <span class="field-error"></span>
-                </td>
-            </tr>
-            <tr>
-                <td>Category</td>
-                <td>
-                    <select name="category_id">
-                        <option value="">Select category</option>
-                        <?php foreach($categories as $category){ ?>
-                            <option value="<?php echo h($category['id']); ?>">
-                                <?php echo h($category['name']); ?> (<?php echo h($category['category_type']); ?>)
-                            </option>
-                        <?php } ?>
-                    </select>
-                    <span class="field-error"></span>
-                </td>
-            </tr>
-            <tr>
-                <td>Vendor Name</td>
-                <td>
-                    <input type="text" name="vendor_name" value="">
-                    <span class="field-error"></span>
-                </td>
-            </tr>
-            <tr>
-                <td>Price</td>
-                <td>
-                    <input type="number" name="price" value="" min="1" step="0.01">
-                    <span class="field-error"></span>
-                </td>
-            </tr>
-            <tr>
-                <td>Availability</td>
-                <td>
-                    <input type="number" name="availability" value="" min="0">
-                    <span class="field-error"></span>
-                </td>
-            </tr>
-            <tr>
-                <td>Image</td>
-                <td>
-                    <input type="file" name="image" accept="image/jpeg,image/png" required>
-                    <span class="field-error"></span>
-                </td>
-            </tr>
-            <tr>
-                <td>Description</td>
-                <td><textarea name="description"></textarea></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="Add Medicine"></td>
-            </tr>
-        </table>
-    </fieldset>
-</form>
+<style>
+body{
+    font-family: Arial;
+    background:#f5f5f5;
+    padding:20px;
+}
 
-<table class="data-table">
-    <tr>
-        <th>Image</th>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Vendor</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Action</th>
-    </tr>
-    <?php foreach($medicines as $medicine){ ?>
-        <tr>
-            <td>
-                <?php if($medicine['image_path'] != "" && file_exists('../' . $medicine['image_path'])){ ?>
-                    <img class="thumb" src="../<?php echo h($medicine['image_path']); ?>" alt="<?php echo h($medicine['name']); ?>">
-                <?php }else{ ?>
-                    No Image
-                <?php } ?>
-            </td>
-            <td><?php echo h($medicine['name']); ?></td>
-            <td><?php echo h($medicine['category_name']); ?> (<?php echo h($medicine['category_type']); ?>)</td>
-            <td><?php echo h($medicine['vendor_name']); ?></td>
-            <td><?php echo number_format((float)$medicine['price'], 2); ?></td>
-            <td><?php echo h($medicine['availability']); ?></td>
-            <td>
-                <a href="medicine_edit.php?id=<?php echo h($medicine['id']); ?>">Edit</a>
-                <form method="post" action="../controllers/medicineController.php" class="inline-form delete-form">
-                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="id" value="<?php echo h($medicine['id']); ?>">
-                    <input type="submit" value="Delete">
-                </form>
-            </td>
-        </tr>
+.card{
+    background:white;
+    border:1px solid #ddd;
+    width:300px;
+    padding:15px;
+    margin:15px;
+    border-radius:6px;
+    display:inline-block;
+    vertical-align:top;
+}
+
+button{
+    background:#2d89ef;
+    color:white;
+    border:none;
+    padding:8px 14px;
+    border-radius:4px;
+    cursor:pointer;
+}
+
+input[type="number"]{
+    padding:5px;
+    width:60px;
+}
+
+a{
+    text-decoration:none;
+    color:#2d89ef;
+}
+</style>
+
+</head>
+<body>
+
+<h1>Medicine List</h1>
+
+<p>Welcome, <?php echo htmlspecialchars($_SESSION['name']); ?> | <a href="../../controllers/logout.php">Logout</a></p>
+
+<h3>
+    <a href="cart.php">
+        Cart (<span id="cartCount">0</span>)
+    </a>
+</h3>
+
+<?php foreach($medicines as $medicine){ ?>
+
+<div class="card">
+
+    <?php if(!empty($medicine['image_path'])){ ?>
+        <img src="../../public/<?php echo htmlspecialchars($medicine['image_path']); ?>"
+             style="width:100%;height:150px;object-fit:cover;border-radius:4px;" alt="">
     <?php } ?>
-</table>
 
-<?php require_once('footer.php'); ?>
+    <h3><?php echo htmlspecialchars($medicine['name']); ?></h3>
+
+    <p>Vendor: <?php echo htmlspecialchars($medicine['vendor_name']); ?></p>
+    <p>Price: <?php echo htmlspecialchars($medicine['price']); ?></p>
+    <p>Available: <?php echo htmlspecialchars($medicine['availability']); ?></p>
+
+    <?php if($medicine['availability'] > 0){ ?>
+
+        <input
+            type="number"
+            id="qty_<?php echo $medicine['id']; ?>"
+            value="1"
+            min="1"
+            max="<?php echo $medicine['availability']; ?>"
+        >
+
+        <br><br>
+
+        <button onclick="addToCart(<?php echo $medicine['id']; ?>)">
+            Add To Cart
+        </button>
+
+    <?php } else { ?>
+        <p style="color:red;">Out of Stock</p>
+    <?php } ?>
+
+</div>
+
+<?php } ?>
+
+<p id="msg"></p>
+
+<script src="../../public/js/cart.js"></script>
+
+</body>
+</html>
