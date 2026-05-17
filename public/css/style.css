@@ -1,0 +1,276 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    background: #f3f3f3;
+    color: #222;
+}
+
+a {
+    color: #0645ad;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.header-table {
+    width: 100%;
+    background: #d9e8ff;
+    border-bottom: 1px solid #8aa9d6;
+    padding: 10px;
+}
+
+.header-table h2 {
+    margin: 0;
+}
+
+.right {
+    text-align: right;
+}
+
+.logout-btn {
+    display: inline-block;
+    background: #b42318;
+    color: white;
+    border: 1px solid #8a1c13;
+    border-radius: 3px;
+    padding: 6px 12px;
+    margin-left: 5px;
+    text-decoration: none;
+}
+
+.logout-btn:hover {
+    background: #8a1c13;
+    text-decoration: none;
+}
+
+.menu {
+    background: #eeeeee;
+    border-bottom: 1px solid #cccccc;
+    padding: 10px;
+}
+
+.menu a {
+    display: inline-block;
+    margin: 4px 6px 4px 0;
+    padding: 8px 12px;
+    background: #2f6fab;
+    color: white;
+    border: 1px solid #24527e;
+    border-radius: 3px;
+    text-decoration: none;
+}
+
+.menu a:hover {
+    background: #1f4f7d;
+    text-decoration: none;
+}
+
+.main {
+    width: 95%;
+    margin: 15px auto;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 15px;
+}
+
+.box {
+    margin-bottom: 20px;
+}
+
+fieldset {
+    border: 1px solid #999999;
+    padding: 15px;
+}
+
+legend {
+    font-weight: bold;
+}
+
+input,
+select,
+textarea {
+    margin: 5px 0;
+    padding: 6px;
+    border: 1px solid #999999;
+    border-radius: 3px;
+    width: 260px;
+}
+
+textarea {
+    width: 400px;
+    height: 80px;
+    resize: none;
+}
+
+input[type="submit"],
+button,
+.btn {
+    background: #2f6fab;
+    color: white;
+    border: 1px solid #24527e;
+    border-radius: 3px;
+    padding: 6px 12px;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    width: auto;
+}
+
+input[type="submit"]:hover,
+button:hover,
+.btn:hover {
+    background: #1f4f7d;
+    text-decoration: none;
+}
+
+.danger,
+.delete-form input[type="submit"] {
+    background: #b42318;
+    border-color: #8a1c13;
+}
+
+.delete-form input[type="submit"],
+.data-table td a,
+.order-action {
+    width: auto;
+    padding: 6px 12px;
+    margin: 2px;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.data-table td a {
+    display: inline-block;
+    background: #2f6fab;
+    color: white;
+    border: 1px solid #24527e;
+    text-decoration: none;
+}
+
+.data-table td a:hover {
+    background: #1f4f7d;
+    text-decoration: none;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.data-table th,
+.data-table td {
+    border: 1px solid #cccccc;
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.data-table th {
+    background: #eeeeee;
+}
+
+.dashboard-box {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 10px 0 20px;
+}
+
+.single-info {
+    width: 210px;
+    min-height: 90px;
+    border: 1px solid #cccccc;
+    background: #f8fbff;
+    padding: 15px;
+    text-align: center;
+}
+
+.single-info b {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.single-info span {
+    display: block;
+    font-size: 30px;
+    color: #2f6fab;
+    font-weight: bold;
+}
+
+.form-table {
+    border-collapse: collapse;
+}
+
+.form-table td {
+    padding: 5px 8px;
+    vertical-align: top;
+}
+
+.form-table td:first-child {
+    width: 130px;
+    font-weight: bold;
+    padding-top: 12px;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.success {
+    color: green;
+    font-weight: bold;
+}
+
+.error,
+.field-error {
+    color: red;
+}
+
+.field-error {
+    display: block;
+    font-size: 13px;
+}
+
+.thumb {
+    width: 60px;
+    height: 45px;
+    object-fit: cover;
+}
+
+.login-box {
+    width: 470px;
+    margin: 80px auto;
+    background: white;
+    border: 1px solid #cccccc;
+    padding: 20px;
+    box-shadow: 0 2px 8px #dddddd;
+}
+
+#ajaxMessage {
+    margin: 10px 0;
+}
+
+@media screen and (max-width: 700px) {
+    .main {
+        width: auto;
+        margin: 10px;
+    }
+
+    .menu a {
+        display: block;
+        margin: 5px 0;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 95%;
+    }
+
+    .data-table {
+        font-size: 13px;
+    }
+}
