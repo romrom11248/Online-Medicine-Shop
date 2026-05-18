@@ -3,8 +3,7 @@
 session_start();
 header('Content-Type: application/json');
 
-// AdminModel loaded first — its getMedicineById loads before
-// medicineModel's guarded version, preventing fatal redefinition error
+
 require_once(__DIR__ . '/../models/AdminModel.php');
 
 // Task 3 models
@@ -13,7 +12,7 @@ require_once(__DIR__ . '/../models/orderModel.php');
 require_once(__DIR__ . '/../models/paymentModel.php');
 require_once(__DIR__ . '/../models/medicineModel.php');
 
-// ─── Task 3: Customer places an order ────────────────────────────────────────
+//Task 3: Customer places an order
 
 function placeOrder(){
 
@@ -76,7 +75,7 @@ function placeOrder(){
     exit();
 }
 
-// ─── Task 2: Admin updates order status ──────────────────────────────────────
+//  Task 2: Admin updates order status 
 
 function handleUpdateOrderStatus(){
 
@@ -108,7 +107,6 @@ function handleUpdateOrderStatus(){
     exit();
 }
 
-// ─── Router ──────────────────────────────────────────────────────────────────
 
 if(isset($_GET['action']) && $_GET['action'] == 'confirm'){
     placeOrder();

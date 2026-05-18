@@ -39,6 +39,7 @@ body{
     padding:20px;
     border-radius:6px;
     border:1px solid #ddd;
+    margin: auto;
 }
 
 button{

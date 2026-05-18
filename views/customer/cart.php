@@ -31,7 +31,7 @@ body{
     background:white;
     border:1px solid #ddd;
     padding:15px;
-    margin:15px 0;
+    margin:20px auto;
     border-radius:6px;
     width:320px;
 }
@@ -49,14 +49,19 @@ a{
     text-decoration:none;
     background:#27ae60;
     color:white;
+  
     padding:10px 15px;
     border-radius:4px;
+}
+
+.idk{
+    text-align:center;
 }
 </style>
 
 </head>
 <body>
-
+<div class="idk">
 <h1>Cart Items</h1>
 
 <p><a href="medicines.php" style="background:#2d89ef;">← Continue Shopping</a></p>
@@ -65,7 +70,7 @@ a{
     Grand Total:
     <span id="total"><?php echo $total; ?></span>
 </h2>
-
+</div>
 <?php if(empty($items)){ ?>
     <p>Your cart is empty.</p>
 <?php } ?>
@@ -106,7 +111,11 @@ a{
 
 </div>
 
+
+
 <?php } ?>
+
+<div class="idk">
 
 <p id="msg"></p>
 
@@ -115,7 +124,7 @@ a{
 <?php if(!empty($items)){ ?>
     <a href="checkout.php">Proceed To Checkout</a>
 <?php } ?>
-
+</div>
 <script src="../../public/js/cart.js"></script>
 
 </body>
