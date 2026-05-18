@@ -58,9 +58,7 @@
             return ['error' => 'Image must be 2MB or less'];
         }
 
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_file($finfo, $_FILES['image']['tmp_name']);
-        finfo_close($finfo);
+        $mime = mime_content_type($_FILES['image']['tmp_name']);
 
         $allowed = [
             'image/jpeg' => 'jpg',

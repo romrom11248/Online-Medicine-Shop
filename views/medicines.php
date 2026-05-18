@@ -7,9 +7,9 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'customer'){
     exit();
 }
 
-require_once('../../models/medicineModel.php');
+require_once(__DIR__ . '/../../config/db.php');
+require_once(__DIR__ . '/../../models/medicineModel.php');
 
-// Get all medicines (no filters)
 $medicines = searchMedicines('', '', '');
 
 ?>
@@ -73,12 +73,21 @@ a{
 
 <?php foreach($medicines as $medicine){ ?>
 
-<div class="card">
+    <div class="card">
 
-    <?php if(!empty($medicine['image_path'])){ ?>
-        <img src="../../public/<?php echo htmlspecialchars($medicine['image_path']); ?>"
-             style="width:100%;height:150px;object-fit:cover;border-radius:4px;" alt="">
-    <?php } ?>
+<?php if(!empty($medicine['image_path']) && file_exists('../../' . $medicine['image_path'])){ ?>
+    <img
+        src="../../<?php echo htmlspecialchars($medicine['image_path']); ?>"
+        style="width:100%; height:150px; object-fit:cover; border-radius:4px;"
+        alt="<?php echo htmlspecialchars($medicine['name']); ?>"
+    >
+<?php } else { ?>
+    <img
+        src="https://placehold.co/300x150?text=No+Image"
+        style="width:100%; height:150px; object-fit:cover; border-radius:4px;"
+        alt="No Image"
+    >
+<?php } ?>
 
     <h3><?php echo htmlspecialchars($medicine['name']); ?></h3>
 
