@@ -27,7 +27,7 @@ function loginUser($email, $password){
     if(password_verify($password, $user['password_hash'])){
         return $user;
     }
-    // fallback for plain-text passwords during dev
+    // fallback
     if($password === $user['password_hash']){
         $hash = password_hash($password, PASSWORD_DEFAULT);
         updateUserPasswordHash($user['id'], $hash);
