@@ -55,12 +55,43 @@ textarea{
     width:100%;
     height:80px;
 }
+
+.top-links{
+    margin-bottom:20px;
+}
+
+.top-links a{
+    text-decoration:none;
+    padding:8px 14px;
+    border-radius:4px;
+    color:white;
+    margin-right:10px;
+}
+
+.back-btn{
+    background:#2d89ef;
+}
+
+.logout-btn{
+    background:#e74c3c;
+}
 </style>
 
 </head>
 <body>
 
 <div class="container">
+<div class="top-links">
+
+<a href="cart.php" class="back-btn">
+    ← Back To Cart
+</a>
+
+<a href="../../controllers/logout.php" class="logout-btn">
+    Logout
+</a>
+
+</div>
 
 <h1>Checkout</h1>
 
